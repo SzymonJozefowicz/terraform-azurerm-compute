@@ -47,10 +47,6 @@ variable "data_disk_count"{
   default=0
 }
 
-variable "data_disk_lun"{
-  default=0
-}
-
  variable "data_disk_size_gb"{
    default=0
  }

@@ -69,7 +69,7 @@ resource "azurerm_virtual_machine" "this" {
     content {
       name              = "${var.prefix}-datadisk-${count.index}"
       create_option     = "Empty"
-      lun               = var.data_disk_lun
+      lun               = count.index
       disk_size_gb      = var.data_disk_size_gb
       managed_disk_type = var.data_disk_managed_disk_type
     }
