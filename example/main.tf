@@ -86,31 +86,63 @@ module "fortinet-ana-nsg" {
   
 }
 
-module "fortinet-ana"{
-    source                      = "szymonjozefowicz/terraform-azurerm-compute"
-    prefix                      = "fortinet-ana"
-    resource_group_name         = azurerm_resource_group.ana.name
-    location                    = azurerm_resource_group.ana.location
-    subnet_id                   = module.network.vnet_subnets[0]
-    network_security_group_id   = module.fortinet-ana-nsg.network_security_group_id
-    public_ip_allocation_method = "Dynamic"
-    vm_size                     = "Standard_F2"
+// module "fortinet-ana"{
+//     source                      = "github.com/szymonjozefowicz/terraform-azurerm-compute"
+//     prefix                      = "fortinet-ana"
+//     resource_group_name         = azurerm_resource_group.ana.name
+//     location                    = azurerm_resource_group.ana.location
+//     subnet_id                   = module.network.vnet_subnets[0]
+//     network_security_group_id   = module.fortinet-ana-nsg.network_security_group_id
+//     public_ip_allocation_method = "Dynamic"
+//     vm_size                     = "Standard_F2"
     
-    image_publisher             = "fortinet"
-    image_offer                 = "fortinet-fortianalyzer"
-    image_sku                   = "fortinet-fortianalyzer"
-    image_version               = "6.2.5"
+//     image_publisher             = "fortinet"
+//     image_offer                 = "fortinet-fortianalyzer"
+//     image_sku                   = "fortinet-fortianalyzer"
+//     image_version               = "6.2.5"
     
-    plan_name                   = "fortinet-fortianalyzer"
-    plan_publisher              = "fortinet"
-    plan_product                = "fortinet-fortianalyzer"
+//     plan_name                   = "fortinet-fortianalyzer"
+//     plan_publisher              = "fortinet"
+//     plan_product                = "fortinet-fortianalyzer"
     
-    caching                     = "ReadWrite"
-    create_option               = "fromImage"
-    managed_disk_type           = "Standard_LRS"
+//     caching                     = "ReadWrite"
+//     create_option               = "fromImage"
+//     managed_disk_type           = "Standard_LRS"
     
-    admin_username              = var.admin_username
-    admin_password              = var.admin_password
+//     admin_username              = var.admin_username
+//     admin_password              = var.admin_password
     
-}
+// }
+
+
+ module "fortinet-ana" {
+    source                        = "github.com/szymonjozefowicz/terraform-azurerm-compute"
+    resource_group_name           = azurerm_resource_group.ana.name
+    location                      = azurerm_resource_group.ana.location
+    vm_hostname                   = "fortinet-ana"
+    nb_public_ip                  = "1"
+    remote_port                   = "22"
+    nb_instances                  = "1"
+    
+    vm_os_publisher               = "fortinet"
+    vm_os_offer                   = "fortinet-fortianalyzer"
+    vm_os_sku                     = "fortinet-fortianalyzer"
+    vm_os_version                 = "6.2.5"
+
+    vnet_subnet_id                = module.network.vnet_subnets[0]
+    boot_diagnostics              = "true"
+    delete_os_disk_on_termination = "true"
+    data_disk                     = "true"
+    data_disk_size_gb             = "1023"
+    data_sa_type                  = "Premium_LRS"
+
+    tags = var.tags
+
+    enable_accelerated_networking = "false"
+  }
+  
+
+  output "linux_vm_private_ips" {
+    value = "${module.fortinet-ana.network_interface_private_ip}"
+  }
 

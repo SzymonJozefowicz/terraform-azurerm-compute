@@ -168,11 +168,11 @@ variable "enable_accelerated_networking" {
   default     = "false"
 }
 
-variable "use_plan"{
-  type        = "string"
-  description = "(Optional) Enable or disable plan section used by marketplace images"
-  default     = "false"
-}
+// variable "use_plan"{
+//   type        = "string"
+//   description = "(Optional) Enable or disable plan section used by marketplace images"
+//   default     = "false"
+// }
 
 variable "plan_name"{
   type        = "string"
