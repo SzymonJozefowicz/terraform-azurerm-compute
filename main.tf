@@ -95,7 +95,7 @@ resource "azurerm_virtual_machine" "marketplace-vm-linux" {
 resource "azurerm_virtual_machine" "vm-linux" {
   count                 = (!var.is_windows_image && !var.is_marketplace_image) ? var.number_of_instances : 0
   // count                 = var.is_marketplace_image ? 0 : var.number_of_instances
-  name                  = "${var.prefix}-${count.index}"
+  name                  = "${var.prefix}${count.index}"
   resource_group_name   = var.resource_group_name
   location              = var.location
   network_interface_ids = [element(azurerm_network_interface.this.*.id,count.index)]
@@ -119,7 +119,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
     for_each = range(var.data_disk_count)
     content {
       
-      name              = "${var.prefix}-datadisk-${count.index}-${storage_data_disk.value}"
+      name              = "${var.prefix}${count.index}-datadisk-${storage_data_disk.value}"
       create_option     = "Empty"
       lun               = storage_data_disk.value
       disk_size_gb      = var.data_disk_size_gb
@@ -146,7 +146,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
 resource "azurerm_virtual_machine" "marketplace-vm-windows" {
   count                 = (var.is_windows_image && var.is_marketplace_image) ? var.number_of_instances : 0
   // count                 = var.is_marketplace_image ? var.number_of_instances : 0
-  name                  = "${var.prefix}-${count.index}"
+  name                  = "${var.prefix}${count.index}"
   resource_group_name   = var.resource_group_name
   location              = var.location
   network_interface_ids = [element(azurerm_network_interface.this.*.id,count.index)]
@@ -176,7 +176,7 @@ resource "azurerm_virtual_machine" "marketplace-vm-windows" {
     for_each = range(var.data_disk_count)
     content {
       
-      name              = "${var.prefix}-datadisk-${count.index}-${storage_data_disk.value}"
+      name              = "${var.prefix}${count.index}-datadisk-${storage_data_disk.value}"
       create_option     = "Empty"
       lun               = storage_data_disk.value
       disk_size_gb      = var.data_disk_size_gb
@@ -202,7 +202,7 @@ resource "azurerm_virtual_machine" "marketplace-vm-windows" {
 resource "azurerm_virtual_machine" "vm-windows" {
   count                 = (var.is_windows_image && !var.is_marketplace_image) ? var.number_of_instances : 0
   // count                 = var.is_marketplace_image ? 0 : var.number_of_instances
-  name                  = "${var.prefix}-${count.index}"
+  name                  = "${var.prefix}${count.index}"
   resource_group_name   = var.resource_group_name
   location              = var.location
   network_interface_ids = [element(azurerm_network_interface.this.*.id,count.index)]
@@ -226,7 +226,7 @@ resource "azurerm_virtual_machine" "vm-windows" {
     for_each = range(var.data_disk_count)
     content {
       
-      name              = "${var.prefix}-datadisk-${count.index}-${storage_data_disk.value}"
+      name              = "${var.prefix}${count.index}-datadisk-${storage_data_disk.value}"
       create_option     = "Empty"
       lun               = storage_data_disk.value
       disk_size_gb      = var.data_disk_size_gb
