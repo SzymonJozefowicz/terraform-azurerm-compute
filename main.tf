@@ -36,8 +36,9 @@ resource "azurerm_network_interface_security_group_association" "this" {
 }
 
 
-resource "azurerm_virtual_machine" "marketplace-vm" {
-  count                 = var.is_marketplace_image ? var.number_of_instances : 0
+resource "azurerm_virtual_machine" "marketplace-vm-linux" {
+  count                 = (!var.is_windows_image && var.is_marketplace_image) ? var.nb_instances : 0
+  // count                 = var.is_marketplace_image ? var.number_of_instances : 0
   name                  = "${var.prefix}-${count.index}"
   resource_group_name   = var.resource_group_name
   location              = var.location
@@ -83,16 +84,17 @@ resource "azurerm_virtual_machine" "marketplace-vm" {
     admin_password = var.admin_password
   }
 
-  // os_profile_linux_config {
-  //   disable_password_authentication = false
-  // }
+  os_profile_linux_config {
+    disable_password_authentication = false
+  }
 
 }
 
 
 
-resource "azurerm_virtual_machine" "vm" {
-  count                 = var.is_marketplace_image ? 0 : var.number_of_instances
+resource "azurerm_virtual_machine" "vm-linux" {
+  count                 = (!var.is_windows_image && !var.is_marketplace_image) ? var.nb_instances : 0
+  // count                 = var.is_marketplace_image ? 0 : var.number_of_instances
   name                  = "${var.prefix}-${count.index}"
   resource_group_name   = var.resource_group_name
   location              = var.location
@@ -132,8 +134,115 @@ resource "azurerm_virtual_machine" "vm" {
     admin_password = var.admin_password
   }
 
-  // os_profile_linux_config {
-  //   disable_password_authentication = false
-  // }
+  os_profile_linux_config {
+    disable_password_authentication = false
+  }
+
+}
+
+
+
+
+resource "azurerm_virtual_machine" "marketplace-vm-windows" {
+  count                 = (var.is_windows_image && var.is_marketplace_image) ? var.nb_instances : 0
+  // count                 = var.is_marketplace_image ? var.number_of_instances : 0
+  name                  = "${var.prefix}-${count.index}"
+  resource_group_name   = var.resource_group_name
+  location              = var.location
+  network_interface_ids = [element(azurerm_network_interface.this.*.id,count.index)]
+  vm_size               = var.vm_size
+
+  storage_image_reference {
+    publisher = var.image_publisher
+    offer     = var.image_offer
+    sku       = var.image_sku
+    version   = var.image_version
+  }
+
+  plan {
+    name      = var.plan_name
+    publisher = var.plan_publisher
+    product   = var.plan_product
+  }
+
+  storage_os_disk {
+    name              = "${var.prefix}${count.index}-osdisk"
+    caching           = var.caching
+    create_option     = var.create_option
+    managed_disk_type = var.os_disk_managed_disk_type
+  }
+
+  dynamic storage_data_disk {
+    for_each = range(var.data_disk_count)
+    content {
+      
+      name              = "${var.prefix}-datadisk-${count.index}-${storage_data_disk.value}"
+      create_option     = "Empty"
+      lun               = storage_data_disk.value
+      disk_size_gb      = var.data_disk_size_gb
+      managed_disk_type = var.data_disk_managed_disk_type
+    }
+  }
+
+
+  os_profile {
+    computer_name  = "${var.prefix}${count.index}"
+    admin_username = var.admin_username
+    admin_password = var.admin_password
+  }
+
+   os_profile_windows_config {
+    provision_vm_agent = true
+  }
+
+}
+
+
+
+resource "azurerm_virtual_machine" "vm-windows" {
+  count                 = (var.is_windows_image && !var.is_marketplace_image) ? var.nb_instances : 0
+  // count                 = var.is_marketplace_image ? 0 : var.number_of_instances
+  name                  = "${var.prefix}-${count.index}"
+  resource_group_name   = var.resource_group_name
+  location              = var.location
+  network_interface_ids = [element(azurerm_network_interface.this.*.id,count.index)]
+  vm_size               = var.vm_size
+
+  storage_image_reference {
+    publisher = var.image_publisher
+    offer     = var.image_offer
+    sku       = var.image_sku
+    version   = var.image_version
+  }
+
+  storage_os_disk {
+    name              = "${var.prefix}${count.index}-osdisk"
+    caching           = var.caching
+    create_option     = var.create_option
+    managed_disk_type = var.os_disk_managed_disk_type
+  }
+
+  dynamic storage_data_disk {
+    for_each = range(var.data_disk_count)
+    content {
+      
+      name              = "${var.prefix}-datadisk-${count.index}-${storage_data_disk.value}"
+      create_option     = "Empty"
+      lun               = storage_data_disk.value
+      disk_size_gb      = var.data_disk_size_gb
+      managed_disk_type = var.data_disk_managed_disk_type
+    }
+  }
+
+
+  os_profile {
+    computer_name  = "${var.prefix}${count.index}"
+    admin_username = var.admin_username
+    admin_password = var.admin_password
+  }
+
+  os_profile_windows_config {
+    provision_vm_agent = true
+  }
 
 }
