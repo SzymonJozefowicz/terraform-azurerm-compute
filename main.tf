@@ -83,9 +83,10 @@ resource "azurerm_virtual_machine" "marketplace-vm" {
     admin_password = var.admin_password
   }
 
-  os_profile_linux_config {
-    disable_password_authentication = false
-  }
+  // os_profile_linux_config {
+  //   disable_password_authentication = false
+  // }
+
 }
 
 
@@ -131,7 +132,8 @@ resource "azurerm_virtual_machine" "vm" {
     admin_password = var.admin_password
   }
 
-  os_profile_linux_config {
-    disable_password_authentication = false
-  }
+  // os_profile_linux_config {
+  //   disable_password_authentication = false
+  // }
+
 }
