@@ -61,3 +61,7 @@ variable "data_disk_managed_disk_type"{
   default = "Standard_LRS"
 }
 
+variable "is_marketplace_image"{
+  default = false
+}
+
