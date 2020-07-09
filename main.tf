@@ -67,9 +67,10 @@ resource "azurerm_virtual_machine" "this" {
   dynamic storage_data_disk {
     for_each = range(var.data_disk_count)
     content {
-      name              = "${var.prefix}-datadisk-${count.index}"
+      
+      name              = "${var.prefix}-datadisk-${count.index}-${storage_data_disk.value}"
       create_option     = "Empty"
-      lun               = count.index
+      lun               = storage_data_disk.value
       disk_size_gb      = var.data_disk_size_gb
       managed_disk_type = var.data_disk_managed_disk_type
     }
