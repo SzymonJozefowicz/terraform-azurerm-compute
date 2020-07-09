@@ -65,3 +65,8 @@ variable "is_marketplace_image"{
   default = false
 }
 
+
+variable "is_windows_image"{
+  default = false
+}
+

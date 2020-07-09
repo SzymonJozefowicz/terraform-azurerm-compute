@@ -93,7 +93,7 @@ resource "azurerm_virtual_machine" "marketplace-vm-linux" {
 
 
 resource "azurerm_virtual_machine" "vm-linux" {
-  count                 = (!var.is_windows_image && !var.is_marketplace_image) ? var.nb_instances : 0
+  count                 = (!var.is_windows_image && !var.is_marketplace_image) ? var.number_of_instances : 0
   // count                 = var.is_marketplace_image ? 0 : var.number_of_instances
   name                  = "${var.prefix}-${count.index}"
   resource_group_name   = var.resource_group_name
@@ -144,7 +144,7 @@ resource "azurerm_virtual_machine" "vm-linux" {
 
 
 resource "azurerm_virtual_machine" "marketplace-vm-windows" {
-  count                 = (var.is_windows_image && var.is_marketplace_image) ? var.nb_instances : 0
+  count                 = (var.is_windows_image && var.is_marketplace_image) ? var.number_of_instances : 0
   // count                 = var.is_marketplace_image ? var.number_of_instances : 0
   name                  = "${var.prefix}-${count.index}"
   resource_group_name   = var.resource_group_name
@@ -200,7 +200,7 @@ resource "azurerm_virtual_machine" "marketplace-vm-windows" {
 
 
 resource "azurerm_virtual_machine" "vm-windows" {
-  count                 = (var.is_windows_image && !var.is_marketplace_image) ? var.nb_instances : 0
+  count                 = (var.is_windows_image && !var.is_marketplace_image) ? var.number_of_instances : 0
   // count                 = var.is_marketplace_image ? 0 : var.number_of_instances
   name                  = "${var.prefix}-${count.index}"
   resource_group_name   = var.resource_group_name
