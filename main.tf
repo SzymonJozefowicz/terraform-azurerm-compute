@@ -37,7 +37,7 @@ resource "azurerm_network_interface_security_group_association" "this" {
 
 
 resource "azurerm_virtual_machine" "marketplace-vm-linux" {
-  count                 = (!var.is_windows_image && var.is_marketplace_image) ? var.nb_instances : 0
+  count                 = (!var.is_windows_image && var.is_marketplace_image) ? var.var.number_of_instances : 0
   // count                 = var.is_marketplace_image ? var.number_of_instances : 0
   name                  = "${var.prefix}-${count.index}"
   resource_group_name   = var.resource_group_name
