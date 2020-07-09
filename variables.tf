@@ -20,9 +20,15 @@ variable "image_sku"{}
 variable "image_version"{}
   
   
-variable "plan_name"{}
-variable "plan_publisher"{}
-variable "plan_product"{}
+variable "plan_name"{
+  default = ""
+}
+variable "plan_publisher"{
+  default = ""
+}
+variable "plan_product"{
+  default = ""
+}
 
 variable "caching"{}
 variable "create_option"{}
